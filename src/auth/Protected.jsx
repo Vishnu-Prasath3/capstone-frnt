@@ -7,18 +7,19 @@ import { useSelector} from "react-redux";
 const useAuth = () => {
   const token = Cookies.get("JwtToken");
   const user = JSON.parse(localStorage.getItem("user"));
-
+  
+  
   if(!token){
     localStorage.removeItem("user")
   }
-  //console.log(user, "user,,,,,,,,,,,");
+  console.log(user, "user,,,,,,,,,,,");
   return token && user;
 };
 
 const PublicRoute = () => {
   const auth = useAuth();
   const navigate = useNavigate();
-  //console.log(auth, "auth.,,,,,,,,.......public....");
+  console.log(auth, "auth.,,,,,,,,.......public....");
 
   useEffect(() => {
     if (auth) {
@@ -33,7 +34,7 @@ const PublicRoute = () => {
 const AdminPublicRoute = () => {
   const auth = useAuth();
   const navigate = useNavigate();
-  //console.log(auth, "auth.,,,,,,,,.......public....");
+  console.log(auth, "auth.,,,,,,,,.......public....");
 
   useEffect(() => {
     if (auth) {
@@ -47,7 +48,7 @@ const AdminPublicRoute = () => {
 const Protected = () => {
   const auth = useAuth();
   const navigate = useNavigate();
-  //console.log(auth, "auth.,,,,,,,,.......protected....");
+  console.log(auth, "auth.,,,,,,,,.......protected....");
   useEffect(() => {
     if (!auth) {
       navigate("/login");
@@ -60,7 +61,7 @@ const Protected = () => {
 const AdminProtected = () => {
   const auth = useAuth();
   const navigate = useNavigate();
-  //console.log(auth, "auth.,,,,,,,,.......protected....");
+  console.log(auth, "auth.,,,,,,,,.......protected....");
   useEffect(() => {
     if (!auth) {
       navigate("/admin/login");
@@ -74,7 +75,7 @@ const SellerRoutes=()=>{
 const {user}=useSelector((state)=>state.auth);
   const auth = useAuth();
   const navigate = useNavigate();
-//console.log(auth, "auth.,,,,,seller routes,,,...........");
+console.log(auth, "auth.,,,,,seller routes,,,...........");
   useEffect(() => {
     if (auth && user.userType !== "seller") {
       navigate("/dashboard");
@@ -88,7 +89,7 @@ const AdminRoutes=()=>{
   const {user}=useSelector((state)=>state.auth);
     const auth = useAuth();
     const navigate = useNavigate();
-  //console.log(auth, "auth.,,,,,seller routes,,,...........");
+  console.log(auth, "auth.,,,,,seller routes,,,...........");
   if (auth && user.userType !== "admin") {
     navigate("/dashboard");
   }
