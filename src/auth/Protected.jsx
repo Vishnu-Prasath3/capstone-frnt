@@ -1,18 +1,18 @@
 import { useEffect } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 import Cookies from "js-cookie";
-import { useSelector} from "react-redux";
-
+import { useSelector } from "react-redux";
 
 const useAuth = () => {
   const token = Cookies.get("JwtToken");
   const user = JSON.parse(localStorage.getItem("user"));
-  
-  
-  if(!token){
-    localStorage.removeItem("user")
-  }
+
+  console.log("Token:", token);
   console.log(user, "user,,,,,,,,,,,");
+  if (!token) {
+    localStorage.removeItem("user");
+  }
+
   return token && user;
 };
 
@@ -29,7 +29,6 @@ const PublicRoute = () => {
 
   return auth ? null : <Outlet />;
 };
-
 
 const AdminPublicRoute = () => {
   const auth = useAuth();
@@ -54,6 +53,9 @@ const Protected = () => {
       navigate("/login");
     }
   }, [auth, navigate]);
+  if (auth === undefined) {
+    return null;
+  }
 
   return auth ? <Outlet /> : null;
 };
@@ -71,11 +73,11 @@ const AdminProtected = () => {
   return auth ? <Outlet /> : null;
 };
 
-const SellerRoutes=()=>{
-const {user}=useSelector((state)=>state.auth);
+const SellerRoutes = () => {
+  const { user } = useSelector((state) => state.auth);
   const auth = useAuth();
   const navigate = useNavigate();
-console.log(auth, "auth.,,,,,seller routes,,,...........");
+  console.log(auth, "auth.,,,,,seller routes,,,...........");
   useEffect(() => {
     if (auth && user.userType !== "seller") {
       navigate("/dashboard");
@@ -83,24 +85,30 @@ console.log(auth, "auth.,,,,,seller routes,,,...........");
   }, [auth, navigate]);
 
   return auth && user.userType === "seller" ? <Outlet /> : null;
-}
+};
 
-const AdminRoutes=()=>{
-  const {user}=useSelector((state)=>state.auth);
-    const auth = useAuth();
-    const navigate = useNavigate();
+const AdminRoutes = () => {
+  const { user } = useSelector((state) => state.auth);
+  const auth = useAuth();
+  const navigate = useNavigate();
   console.log(auth, "auth.,,,,,seller routes,,,...........");
   if (auth && user.userType !== "admin") {
     navigate("/dashboard");
   }
-    useEffect(() => {
-      if (auth && user.userType !== "admin") {
-        navigate("/dashboard");
-      }
-    }, [auth, navigate]);
-  
-    return auth && user.userType === "admin" ? <Outlet /> : null;
-  }
+  useEffect(() => {
+    if (auth && user.userType !== "admin") {
+      navigate("/dashboard");
+    }
+  }, [auth, navigate]);
 
-export { PublicRoute,SellerRoutes, AdminRoutes,AdminProtected , AdminPublicRoute};
+  return auth && user.userType === "admin" ? <Outlet /> : null;
+};
+
+export {
+  PublicRoute,
+  SellerRoutes,
+  AdminRoutes,
+  AdminProtected,
+  AdminPublicRoute,
+};
 export default Protected;
